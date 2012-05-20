@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-  <!--
+<!--
 
     Copyright 2008 Marvin Herman Froeder
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,20 +17,23 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>net.codefrog.cfviewer</groupId>
   <artifactId>cfviewer</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>swf</packaging>
-
   <name>cfviewer Flex</name>
-<repositories>
+  <repositories>
     <repository>
-      <id>flexmojos</id>
-      <url>http://repository.sonatype.org/content/groups/flexgroup/</url>
+      <id>flex-mojos-repository</id>
+      <url>http://repository.sonatype.org/content/groups/flexgroup</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
     </repository>
   </repositories>
-
   <build>
     <sourceDirectory>src/main/flex</sourceDirectory>
     <testSourceDirectory>src/test/flex</testSourceDirectory>
@@ -43,7 +46,6 @@
       </plugin>
     </plugins>
   </build>
-
   <dependencies>
     <dependency>
       <groupId>com.adobe.flex.framework</groupId>
@@ -51,7 +53,6 @@
       <version>3.2.0.3958</version>
       <type>pom</type>
     </dependency>
-
     <!-- flexmojos Unit testing support -->
     <dependency>
       <groupId>org.sonatype.flexmojos</groupId>
@@ -61,5 +62,16 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
+  <pluginRepositories>
+    <pluginRepository>
+      <id>flex-mojos-repository</id>
+      <url>http://repository.sonatype.org/content/groups/flexgroup</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 </project>

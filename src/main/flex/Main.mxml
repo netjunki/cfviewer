@@ -10,6 +10,16 @@
 	</mx:HBox>
 	
 	<mx:SWFLoader scaleContent="true" autoLoad="false" id="viewport" top="89" bottom="-550" right="68.5" left="68.5" complete="initApp()"/>
+
+	<mx:HBox>
+		<mx:ApplicationControlBar >
+			<mx:Button label="Prev" click="prevFrame();"/>
+			<mx:Button label="Next" click="nextFrame();"/>
+			<mx:Button label="Print" click="printAll();" id="printButton2" enabled="{canPrint}"/>
+			<mx:Label text="Label" id="pageNumber2"/>
+		</mx:ApplicationControlBar>
+	</mx:HBox>
+	
 	<mx:Script>
 		<![CDATA[
 		
@@ -32,6 +42,7 @@
           	 	loadedSM = MovieClip(viewport.content);
           	 	frameTotal = loadedSM.totalFrames;
           	 	pageNumber.text = frameCurrent+" Of "+frameTotal;
+          	 	pageNumber2.text = frameCurrent+" Of "+frameTotal;
           	 }
           	 
           	 public function nextFrame():void{
@@ -39,6 +50,7 @@
           	 		loadedSM.nextFrame();
           	 		frameCurrent++;
           	 		pageNumber.text = frameCurrent+" Of "+frameTotal;
+          	 		pageNumber2.text = frameCurrent+" Of "+frameTotal;
           	 	}
           	 }
           	 public function prevFrame():void{
@@ -46,6 +58,7 @@
           	 		loadedSM.prevFrame()
           	 		frameCurrent--;
           	 		pageNumber.text = frameCurrent+" Of "+frameTotal;
+          	 		pageNumber2.text = frameCurrent+" Of "+frameTotal;
           	 	}
           	 }
           	 public function printAll():void{

@@ -11,7 +11,7 @@
 	
 	<mx:SWFLoader scaleContent="true" autoLoad="false" id="viewport" top="89" bottom="-550" right="68.5" left="68.5" complete="initApp()"/>
 
-	<mx:HBox>
+	<mx:HBox visible="{bottomControl}">
 		<mx:ApplicationControlBar >
 			<mx:Button label="Prev" click="prevFrame();"/>
 			<mx:Button label="Next" click="nextFrame();"/>
@@ -22,18 +22,21 @@
 	
 	<mx:Script>
 		<![CDATA[
-		
+		import mx.controls.Alert;
 			 [Bindable ]
           	 public var swfURL:String;
           	 [Bindable ]
           	 public var canPrint:Boolean;
+          	 [Bindable ]
+          	 public var bottomControl:Boolean;
           	 
           	 public var frameTotal:Number;
           	 public var frameCurrent:Number=1;
           	 public var loadedSM:MovieClip;
           	 
           	 public function initSWF():void{
-          	 	canPrint = Application.application.parameters.canPrint;
+          	 	canPrint = Boolean(parseInt(Application.application.parameters.canPrint) == 1);
+          	 	bottomControl = Boolean(parseInt(Application.application.parameters.bottomControl) == 1);
           	 	//swfURL 
           	 	viewport.load(Application.application.parameters.swfURL);
           	 }
@@ -62,23 +65,23 @@
           	 	}
           	 }
           	 public function printAll():void{
-          	 	var printJob:PrintJob = new PrintJob();
-          	 	printJob.start();
-          	 	var idxPage:Number = 1;
-          	 	if (loadedSM.height > printJob.pageHeight)
-				{
-					trace(loadedSM.height +"="+ printJob.pageHeight);
-				    loadedSM.scaleY = .75;
-				}
-
-
-          	 	for( idxPage;idxPage <= 5;idxPage++ ){
-          	 		loadedSM.gotoAndStop(idxPage);
-          	 		printJob.addPage(loadedSM);
-          	 		          	 			
-          	 	}
-          	 	printJob.send();
-          	 	loadedSM.scaleY = 1;
+		        if (canPrint) {
+          	 	    var printJob:PrintJob = new PrintJob();
+			    printJob.start();
+			    var idxPage:Number = 1;
+			    if (loadedSM.height > printJob.pageHeight) {
+			        trace(loadedSM.height +"="+ printJob.pageHeight);
+				loadedSM.scaleY = .75;
+			    }
+                            for( idxPage;idxPage <= 5;idxPage++ ){
+			        loadedSM.gotoAndStop(idxPage);
+				printJob.addPage(loadedSM);
+			    }
+			    printJob.send();
+			    loadedSM.scaleY = 1;
+			} else {
+			    Alert.show('Printing Disabled', 'Alert Box', mx.controls.Alert.OK);
+			}
           	 }
 		]]>
 	</mx:Script>

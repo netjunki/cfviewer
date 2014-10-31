@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initSWF();">
+	<mx:ProgressBar id="bar" minimum="0" visible="true" maximum="100" direction="right" mode="polled" source="viewport" width="100%"
+	complete="progressBar_complete(event);" />
+	
 	<mx:HBox>
 		<mx:ApplicationControlBar >
+			<mx:Button label="First" click="firstFrame();"/>
 			<mx:Button label="Prev" click="prevFrame();"/>
-			<mx:Button label="Next" click="nextFrame();"/>
+			<mx:Button label="Next" click="nextFrame();" visible="{canPrint}" includeInLayout="{canPrint}"/>
+			<mx:Button label="Last" click="lastFrame();" visible="{canPrint}" includeInLayout="{canPrint}"/>
 			<mx:Button label="Print" click="printAll();" id="printButton" enabled="{canPrint}"/>
 			<mx:Label text="Label" id="pageNumber"/>
 		</mx:ApplicationControlBar>
 	</mx:HBox>
-	
+		
 	<mx:SWFLoader scaleContent="true" autoLoad="false" id="viewport" top="89" bottom="-550" right="68.5" left="68.5" complete="initApp()"/>
 
 	<mx:HBox visible="{bottomControl}">
 		<mx:ApplicationControlBar >
+			<mx:Button label="First" click="firstFrame();"/>
 			<mx:Button label="Prev" click="prevFrame();"/>
 			<mx:Button label="Next" click="nextFrame();"/>
+			<mx:Button label="Last" click="lastFrame();"/>
 			<mx:Button label="Print" click="printAll();" id="printButton2" enabled="{canPrint}"/>
 			<mx:Label text="Label" id="pageNumber2"/>
 		</mx:ApplicationControlBar>
@@ -41,29 +48,39 @@
           	 	viewport.load(Application.application.parameters.swfURL);
           	 }
           	 
+		 public function updatePageNumber():void{
+          	 	pageNumber.text = frameCurrent+" Of "+frameTotal;
+          	 	pageNumber2.text = frameCurrent+" Of "+frameTotal;		       
+		 }
+		 
           	 public function initApp():void{
           	 	loadedSM = MovieClip(viewport.content);
           	 	frameTotal = loadedSM.totalFrames;
-          	 	pageNumber.text = frameCurrent+" Of "+frameTotal;
-          	 	pageNumber2.text = frameCurrent+" Of "+frameTotal;
+			updatePageNumber();
           	 }
           	 
           	 public function nextFrame():void{
           	 	if(frameCurrent<=frameTotal){
           	 		loadedSM.nextFrame();
           	 		frameCurrent++;
-          	 		pageNumber.text = frameCurrent+" Of "+frameTotal;
-          	 		pageNumber2.text = frameCurrent+" Of "+frameTotal;
+				updatePageNumber();
           	 	}
           	 }
           	 public function prevFrame():void{
           	 	if(frameCurrent>0){
-          	 		loadedSM.prevFrame()
+          	 		loadedSM.prevFrame();
           	 		frameCurrent--;
-          	 		pageNumber.text = frameCurrent+" Of "+frameTotal;
-          	 		pageNumber2.text = frameCurrent+" Of "+frameTotal;
+				updatePageNumber();
           	 	}
           	 }
+		 public function firstFrame():void {
+		        loadedSM.gotoAndStop(1);
+			updatePageNumber();
+		 }
+		 public function lastFrame():void {
+		        loadedSM.gotoAndStop(frameTotal);
+			updatePageNumber();
+		 }
           	 public function printAll():void{
 		        if (canPrint) {
           	 	    var printJob:PrintJob = new PrintJob();
@@ -83,6 +100,11 @@
 			    Alert.show('Printing Disabled', 'Alert Box', mx.controls.Alert.OK);
 			}
           	 }
+		 
+		 private function progressBar_complete(evt:Event):void {
+		        bar.includeInLayout = false;
+			bar.visible = false;
+		 }
 		]]>
 	</mx:Script>
 	

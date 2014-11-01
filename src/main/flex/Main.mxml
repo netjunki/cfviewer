@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="initSWF();">
-	<mx:ProgressBar id="bar" minimum="0" visible="true" maximum="100" direction="right" mode="polled" source="viewport" width="100%"
-	complete="progressBar_complete(event);" />
 	
 	<mx:HBox>
 		<mx:ApplicationControlBar >
-			<mx:Button label="First" click="firstFrame();"/>
+			<mx:Button label="First" click="firstFrame();" visible="{canPrint}" includeInLayout="{canPrint}"/>
 			<mx:Button label="Prev" click="prevFrame();"/>
-			<mx:Button label="Next" click="nextFrame();" visible="{canPrint}" includeInLayout="{canPrint}"/>
+			<mx:Button label="Next" click="nextFrame();"/>
 			<mx:Button label="Last" click="lastFrame();" visible="{canPrint}" includeInLayout="{canPrint}"/>
 			<mx:Button label="Print" click="printAll();" id="printButton" enabled="{canPrint}"/>
 			<mx:Label text="Label" id="pageNumber"/>
 		</mx:ApplicationControlBar>
 	</mx:HBox>
 		
-	<mx:SWFLoader scaleContent="true" autoLoad="false" id="viewport" top="89" bottom="-550" right="68.5" left="68.5" complete="initApp()"/>
+	<mx:ProgressBar id="bar" minimum="0" visible="true" maximum="100" direction="right" mode="polled" source="viewport" width="100%"
+	complete="progressBar_complete(event);" />
+	
+	<mx:SWFLoader scaleContent="true" autoLoad="false" id="viewport" top="89" bottom="-550" right="68.5" left="68.5" complete="initApp()" visible="false"/>
 
 	<mx:HBox visible="{bottomControl}">
 		<mx:ApplicationControlBar >
-			<mx:Button label="First" click="firstFrame();"/>
+			<mx:Button label="First" click="firstFrame();" visible="{canPrint}" includeInLayout="{canPrint}"/>
 			<mx:Button label="Prev" click="prevFrame();"/>
 			<mx:Button label="Next" click="nextFrame();"/>
-			<mx:Button label="Last" click="lastFrame();"/>
+			<mx:Button label="Last" click="lastFrame();" visible="{canPrint}" includeInLayout="{canPrint}"/>
 			<mx:Button label="Print" click="printAll();" id="printButton2" enabled="{canPrint}"/>
 			<mx:Label text="Label" id="pageNumber2"/>
 		</mx:ApplicationControlBar>
@@ -46,11 +47,12 @@
           	 	bottomControl = Boolean(parseInt(Application.application.parameters.bottomControl) == 1);
           	 	//swfURL 
           	 	viewport.load(Application.application.parameters.swfURL);
+			updatePageNumber();
           	 }
           	 
 		 public function updatePageNumber():void{
-          	 	pageNumber.text = frameCurrent+" Of "+frameTotal;
-          	 	pageNumber2.text = frameCurrent+" Of "+frameTotal;		       
+          	 	pageNumber.text = loadedSM.currentFrame+" Of "+loadedSM.totalFrames;
+          	 	pageNumber2.text = loadedSM.currentFrame+" Of "+loadedSM.totalFrames;
 		 }
 		 
           	 public function initApp():void{
@@ -74,11 +76,13 @@
           	 	}
           	 }
 		 public function firstFrame():void {
-		        loadedSM.gotoAndStop(1);
+		        loadedSM.gotoAndPlay(1);
+			frameCurrent = 1;
 			updatePageNumber();
 		 }
 		 public function lastFrame():void {
-		        loadedSM.gotoAndStop(frameTotal);
+		        loadedSM.gotoAndPlay(frameTotal);
+			frameCurrent = frameTotal;
 			updatePageNumber();
 		 }
           	 public function printAll():void{
@@ -104,6 +108,7 @@
 		 private function progressBar_complete(evt:Event):void {
 		        bar.includeInLayout = false;
 			bar.visible = false;
+			viewport.visible = true;
 		 }
 		]]>
 	</mx:Script>
